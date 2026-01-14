@@ -3,285 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>faceless</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
+    <title>Cloud Auth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
-
         :root {
-            --accent: #ffffff;
             --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.02);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: rgba(255, 255, 255, 0.8);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; font-family: 'Inter', sans-serif; }
-        
-        body { background: var(--bg); color: #fff; overflow-x: hidden; }
-
-        /* бро нихуя тут не трогай */
-        #cursor {
-            width: 5px; height: 8px; background: var(--accent);
-            border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000;
-        }
-        #cursor-follower {
-            width: 30px; height: 30px; border: 2px solid var(--accent);
-            border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999;
-            transition: transform 0.15s ease-out;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        nav a { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; opacity: 0.4; transition: 0.3s; }
-        nav a:hover { opacity: 1; color: var(--accent); }
-
-        .work-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .work-item {
-            aspect-ratio: 1 / 1;
-            background: #0f0f0f;
-            position: relative;
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
-            border-radius: 10px;
+            position: relative;
         }
-        .work-img {
-            width: 100%; height: 100%; object-fit: cover; opacity: 0.4;
-            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .work-item:hover .work-img { transform: scale(1.05); opacity: 0.7; }
-        .work-info {
-            position: absolute; bottom: 30px; left: 30px; opacity: 0; transform: translateY(10px);
-            transition: 0.4s;
-        }
-        .work-item:hover .work-info { opacity: 1; transform: translateY(0); }
 
-        #settings-panel {
-            position: fixed; top: 0; right: -400px; width: 350px; height: 100vh;
-            background: #0a0a0a; z-index: 500; padding: 60px 40px;
-            border-left: 1px solid rgba(255,255,255,0.05);
-            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Заблюренные огни на фоне */
+        .blobs {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            filter: blur(80px);
         }
-        #settings-panel.open { right: 0; }
 
-        .lang-btn { opacity: 0.3; transition: 0.3s; font-size: 12px; }
-        .lang-btn.active { opacity: 1; color: var(--accent); font-weight: bold; }
+        .blob {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: move 20s infinite alternate;
+        }
 
-        .mini-player {
-            position: fixed; bottom: 30px; left: 30px; z-index: 100;
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px); padding: 12px 20px; border-radius: 50px;
-            display: flex; items-center; gap: 15px;
+        .blob-1 { background: #4f46e5; top: -100px; left: -100px; }
+        .blob-2 { background: #7c3aed; bottom: -100px; right: -100px; animation-delay: -5s; }
+        .blob-3 { background: #2563eb; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-duration: 15s; }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(100px, 100px) scale(1.2); }
+        }
+
+        /* Стеклянная карточка */
+        .glass-container {
+            background: var(--glass);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--border);
+            padding: 60px 100px;
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* Темная стеклянная кнопка */
+        .action-btn {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--accent);
+            border: 1px solid var(--border);
+            padding: 16px 45px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 200;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+            transform: scale(1.02);
+        }
+
+        /* Центрированный IP внизу */
+        .ip-mask {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            cursor: help;
+            transition: color 0.3s ease;
+        }
+
+        .ip-mask:hover {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Анимация загрузки */
+        .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .fade-out {
+            opacity: 0;
+            transition: opacity 1s ease;
         }
     </style>
 </head>
-<body>
+<body id="body">
 
-    <div id="cursor"></div>
-    <div id="cursor-follower"></div>
-
-    <header class="fixed top-0 left-0 w-full p-8 flex justify-between items-center z-[100] backdrop-blur-sm">
-        <div class="text-xl font-black tracking-tighter btn-hover">brain</div>
-        
-        <nav class="hidden md:flex gap-10">
-            <a href="#home" class="nav-link btn-hover" data-i18n="nav-home">Home</a>
-            <a href="#works" class="nav-link btn-hover" data-i18n="nav-works">Works</a>
-            <a href="#about" class="nav-link btn-hover" data-i18n="nav-about">About Me</a>
-        </nav>
-
-        <button id="menu-toggle" class="btn-hover text-[10px] uppercase tracking-widest font-bold">
-            <span data-i18n="customize">Customize</span>
-        </button>
-    </header>
-
-    <!-- панель долбоеба -->
-    <aside id="settings-panel">
-       <div class="flex justify-between items-center mb-16"> 
-         <h2 class="text-xs uppercase tracking-widest opacity-30" data-i18n="settings">Settings</h2>
-            <button id="close-panel" class="btn-hover"><i data-lucide="x"></i></button>
-        </div> 
-<!-- 
-        <div class="space-y-12">
-            <div>
-                <p class="text-[10px] uppercase tracking-widest opacity-30 mb-5" data-i18n="language">Language</p>
-                <div class="flex gap-6">
-                    <button class="lang-btn btn-hover active" onclick="setLang('ru')">RU</button>
-                    <button class="lang-btn btn-hover" onclick="setLang('en')">EN</button>
-                </div>
-            </div> -->
-
-            <div>
-                <p class="text-[10px] uppercase tracking-widest opacity-30 mb-5" data-i18n="theme">Visual Theme</p>
-                <div class="flex gap-4">
-                    <button class="theme-opt w-6 h-6 rounded-full bg-white" data-color="#ffffff"></button>
-                    <button class="theme-opt w-6 h-6 rounded-full bg-yellow-400" data-color="#ffffe0"></button>
-                    <button class="theme-opt w-6 h-6 rounded-full bg-purple-500" data-color="#997a8d"></button>
-                </div>
-            </div>
-        </div>
-    </aside>
-
-    <div class="mini-player">
-        <button id="master-play" class="btn-hover">
-            <i data-lucide="play" class="w-4 h-4" id="play-icon"></i>
-        </button>
-        <div class="text-[10px] uppercase tracking-widest font-bold">madk1d - дырки в штанах</div>
-        <input type="range" id="master-vol" min="0" max="1" step="0.1" value="0.5" class="w-20 opacity-30 hover:opacity-100 transition-opacity">
+    <!-- Фоновые огни -->
+    <div class="blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
     </div>
 
-    <main>
-        <section id="home" class="h-screen flex items-center px-10 md:px-20">
-            <div class="max-w-4xl">
-                <h1 class="text-[12vw] md:text-[8vw] font-black leading-[0.85] tracking-tighter mb-8" id="hero-title">
-                    FRONTEND <br> <span class="italic opacity-20 hover:opacity-100 transition-opacity">DEVELOPER</span>
-                </h1>
-                <p class="text-lg md:text-xl text-slate-500 max-w-lg font-light" data-i18n="hero-desc">
-                    Минимализм — это не отсутствие чего-либо. Это идеальное количество чего-либо.
-                </p>
-            </div>
-        </section>
+    <!-- Основной блок -->
+    <div class="glass-container" id="card">
+        <div id="wrapper">
+            <button class="action-btn" id="auth-btn">Authorize</button>
+        </div>
+        <div class="loader" id="loader"></div>
+    </div>
 
-        <section id="works" class="py-32 px-10 md:px-20">
-            <h2 class="text-4xl font-black tracking-tighter mb-16 uppercase" data-i18n="nav-works">Portfolio</h2>
-            <div class="work-grid">
-                <div class="work-item btn-hover">
-                <a href="https://forcemine.net">  <img src="img/forcemine.jpg" class="work-img" alt=""> </a>
-                    <div class="work-info">
-                        <p class="text-[10px] uppercase tracking-widest opacity-50">Minecraft Server</p>
-                        <h3 class="text-xl font-bold">ForceMine</h3>
-                    </div>
-                </div>
-                <div class="work-item btn-hover">
-                    <a href="https://t.me/GrimPlus"> <img src="img/grim2.png" class="work-img" alt=""> </a>
-                    <div class="work-info">
-                        <p class="text-[10px] uppercase tracking-widest opacity-50">AntiCheat</p>
-                        <h3 class="text-xl font-bold">Grim Plus (AI)</h3>
-                    </div>
-                </div>
-                <div class="work-item btn-hover">
-                    <img src="img/photo.jpg" class="work-img" alt="">
-                    <div class="work-info">
-                        <p class="text-[10px] uppercase tracking-widest opacity-50"></p>
-                        <h3 class="text-xl font-bold">Maybe soon</h3>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="py-32 px-10 md:px-20 bg-white/5">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-20">
-                <div class="space-y-10">
-                    <h2 class="text-4xl font-black tracking-tighter uppercase" data-i18n="nav-about">About Me</h2>
-                    <p class="text-xl text-slate-400 leading-relaxed" data-i18n="about-text">
-                    <i><b>Неудавшийся бизнесмен, <br>работаю учителем в Норильске зп 15.000. <br>Помоги мне по ссылке ниже <br></i></b>
-                    <a href="https://t.me/scarekid">Просто людь) {Telegram}</a>
-                    <!-- </p>
-                </div>
-                <div class="aspect-square bg-white/5 rounded-lg flex items-center justify-center border border-white/10">
-                    <span class="text-[10px] uppercase tracking-widest opacity-20">Space for your Photo</span>
-                </div> -->
-            </div>
-        </section>
-    </main>
-
-    <audio id="snd-bg" loop src="music/track.mp3"></audio>
-    <audio id="snd-click" src="music/key.mp3"></audio>
+    <!-- Скрытый IP -->
+    <div class="ip-mask" id="ip-display">Node: ***.***.***.***</div>
 
     <script>
-        gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
-        lucide.createIcons();
-        const translations = {
-            ru: {
-                "nav-home": "Главная",
-                "nav-works": "Портфолио",
-                "nav-about": "Кто я?",
-                "customize": "Визуализация",
-                "settings": "Настройки",
-                "language": "Язык",
-                "theme": "Тема",
-                "hero-desc": "Минимализм — это не отсутствие чего-либо. Это идеальное количество чего-либо.",
-                "about-text": "Просто людь)"
-            },
-            en: {
-                "nav-home": "Home",
-                "nav-works": "Portfolio",
-                "nav-about": "About Me",
-                "customize": "Customize",
-                "settings": "Settings",
-                "language": "Language",
-                "theme": "Theme",
-                "hero-desc": "Minimalism is not the lack of something. It's simply the perfect amount of something.",
-                "about-text": "McQueen"
-            }
-        };
+        const btn = document.getElementById('auth-btn');
+        const loader = document.getElementById('loader');
+        const wrapper = document.getElementById('wrapper');
+        const body = document.getElementById('body');
+        const ipDisplay = document.getElementById('ip-display');
 
-        function setLang(lang) {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                el.innerText = translations[lang][key];
-            });
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        let originalIP = '';
+        let maskedIP = '';
+
+        // Функция маскировки IP
+        function maskIP(ip) {
+            const parts = ip.split('.');
+            if (parts.length === 4) {
+                return XXXINLINECODEXXX0XXXINLINECODEXXX;
+            }
+            return ip;
         }
 
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                const target = link.getAttribute('href');
-                gsap.to(window, { duration: 1.2, scrollTo: target, ease: "power4.inOut" });
+        // Получаем IP
+        fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => {
+                originalIP = data.ip;
+                maskedIP = maskIP(data.ip);
+                ipDisplay.innerText = XXXINLINECODEXXX1XXXINLINECODEXXX;
+            })
+            .catch(() => {
+                ipDisplay.innerText = 'Point: Encrypted';
             });
+
+        // Логика показа при наведении
+        ipDisplay.addEventListener('mouseenter', () => {
+            if (originalIP) ipDisplay.innerText = XXXINLINECODEXXX2XXXINLINECODEXXX;
         });
 
-        const cursor = document.getElementById('cursor');
-        const follower = document.getElementById('cursor-follower');
-
-        window.addEventListener('mousemove', e => {
-            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0 });
-            gsap.to(follower, { x: e.clientX - 15, y: e.clientY - 15, duration: 0.2 });
+        ipDisplay.addEventListener('mouseleave', () => {
+            if (maskedIP) ipDisplay.innerText = XXXINLINECODEXXX3XXXINLINECODEXXX;
         });
 
-        document.querySelectorAll('.btn-hover').forEach(el => {
-            el.addEventListener('mouseenter', () => gsap.to(follower, { scale: 2, background: 'rgba(255,255,255,0.05)' }));
-            el.addEventListener('mouseleave', () => gsap.to(follower, { scale: 1, background: 'transparent' }));
-            el.addEventListener('mousedown', () => {
-                const s = document.getElementById('snd-click');
-                s.currentTime = 0; s.play();
-            });
+        btn.addEventListener('click', () => {
+            wrapper.style.display = 'none';
+            loader.style.display = 'block';
+
+            setTimeout(() => {
+                body.classList.add('fade-out');
+                setTimeout(() => {
+                    window.location.href = 'main.html'; 
+                }, 1000);
+            }, 2000);
         });
-
-        const panel = document.getElementById('settings-panel');
-        document.getElementById('menu-toggle').addEventListener('click', () => panel.classList.add('open'));
-        document.getElementById('close-panel').addEventListener('click', () => panel.classList.remove('open'));
-
-        document.querySelectorAll('.theme-opt').forEach(opt => {
-            opt.addEventListener('click', () => {
-                const color = opt.getAttribute('data-color');
-                document.documentElement.style.setProperty('--accent', color);
-                gsap.to(cursor, { backgroundColor: color });
-                gsap.to(follower, { borderColor: color });
-            });
-        });
-
-        const bgMusic = document.getElementById('snd-bg');
-        const playBtn = document.getElementById('master-play');
-        let isPlaying = false;
-
-        playBtn.addEventListener('click', () => {
-            if(!isPlaying) {
-                bgMusic.play();
-                document.getElementById('play-icon').setAttribute('data-lucide', 'pause');
-            } else {
-                bgMusic.pause();
-                document.getElementById('play-icon').setAttribute('data-lucide', 'play');
-            }
-            isPlaying = !isPlaying;
-            lucide.createIcons();
-        });
-
-        document.getElementById('master-vol').addEventListener('input', e => bgMusic.volume = e.target.value);
     </script>
 </body>
 </html>
