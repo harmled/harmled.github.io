@@ -24,11 +24,11 @@
 
         /* бро нихуя тут не трогай */
         #cursor {
-            width: 8px; height: 8px; background: var(--accent);
+            width: 5px; height: 8px; background: var(--accent);
             border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000;
         }
         #cursor-follower {
-            width: 30px; height: 30px; border: 1px solid var(--accent);
+            width: 30px; height: 30px; border: 2px solid var(--accent);
             border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999;
             transition: transform 0.15s ease-out;
         }
@@ -103,7 +103,7 @@
          <h2 class="text-xs uppercase tracking-widest opacity-30" data-i18n="settings">Settings</h2>
             <button id="close-panel" class="btn-hover"><i data-lucide="x"></i></button>
         </div> 
-
+<!-- 
         <div class="space-y-12">
             <div>
                 <p class="text-[10px] uppercase tracking-widest opacity-30 mb-5" data-i18n="language">Language</p>
@@ -111,7 +111,7 @@
                     <button class="lang-btn btn-hover active" onclick="setLang('ru')">RU</button>
                     <button class="lang-btn btn-hover" onclick="setLang('en')">EN</button>
                 </div>
-            </div>
+            </div> -->
 
             <div>
                 <p class="text-[10px] uppercase tracking-widest opacity-30 mb-5" data-i18n="theme">Visual Theme</p>
@@ -128,7 +128,7 @@
         <button id="master-play" class="btn-hover">
             <i data-lucide="play" class="w-4 h-4" id="play-icon"></i>
         </button>
-        <div class="text-[10px] uppercase tracking-widest font-bold">ivycraft - люблю москву, но снится london</div>
+        <div class="text-[10px] uppercase tracking-widest font-bold">madk1d - дырки в штанах</div>
         <input type="range" id="master-vol" min="0" max="1" step="0.1" value="0.5" class="w-20 opacity-30 hover:opacity-100 transition-opacity">
     </div>
 
@@ -162,7 +162,7 @@
                     </div>
                 </div>
                 <div class="work-item btn-hover">
-                    <img src="img/dp.jpg" class="work-img" alt="">
+                    <img src="img/photo.jpg" class="work-img" alt="">
                     <div class="work-info">
                         <p class="text-[10px] uppercase tracking-widest opacity-50"></p>
                         <h3 class="text-xl font-bold">Maybe soon</h3>
