@@ -2099,3 +2099,26 @@ body {
 .tech-badge i {
     font-size: 0.85rem;
 }
+
+
+/* Project Stats */
+.project-stats {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.project-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.project-stat i {
+    color: rgba(167, 139, 250, 0.8);
+    font-size: 0.9rem;
+}
