@@ -275,6 +275,33 @@
                         <span>Soundcloud</span>
                     </a>
                 </div>
+                
+                <!-- Weather Widget -->
+                <div class="weather-widget-inline glass">
+                    <div class="weather-header">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span class="weather-city">Старополь</span>
+                    </div>
+                    <div class="weather-main">
+                        <div class="weather-icon" id="weatherIconInline">
+                            <i class="fas fa-cloud-sun"></i>
+                        </div>
+                        <div class="weather-info">
+                            <div class="weather-temp" id="weatherTempInline">--°</div>
+                            <div class="weather-desc" id="weatherDescInline">Загрузка...</div>
+                        </div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="weather-detail">
+                            <i class="fas fa-wind"></i>
+                            <span id="weatherWindInline">-- м/с</span>
+                        </div>
+                        <div class="weather-detail">
+                            <i class="fas fa-tint"></i>
+                            <span id="weatherHumidityInline">--%</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -307,6 +334,15 @@
         </div>
     </div>
 
-    <script src="js/script.js?v=3"></script>
+    <script src="js/script.js?v=4"></script>
+    <script>
+        // Принудительная инициализация погоды
+        setTimeout(function() {
+            console.log('🔄 Force weather update');
+            if (typeof showStaticWeather === 'function') {
+                showStaticWeather();
+            }
+        }, 200);
+    </script>
 </body>
 </html>

@@ -224,6 +224,12 @@ const tracks = [
         artist: 'sewerslvt',
         url: 'tracks/sewer.mp3',
         cover: 'covers/track3.jpg'
+    },
+    { 
+        name: 'таблетки',
+        artist: 'трагедия',
+        url: 'tracks/tabletki.mp3',
+        cover: 'covers/track4.jpg'
     }
 ];
 
@@ -777,3 +783,103 @@ setTimeout(() => {
     notifyTelegram();
 }, 2000);
 
+
+
+// ============================================
+// Weather Widget для города Старополь
+// ============================================
+function showStaticWeather() {
+    // Статичные данные для Старополя (зимняя погода)
+    const tempEl = document.getElementById('weatherTempInline');
+    const descEl = document.getElementById('weatherDescInline');
+    const windEl = document.getElementById('weatherWindInline');
+    const humidityEl = document.getElementById('weatherHumidityInline');
+    const iconEl = document.getElementById('weatherIconInline');
+    
+    if (tempEl) tempEl.textContent = '-5°';
+    if (descEl) descEl.textContent = 'облачно';
+    if (windEl) windEl.textContent = '3 м/с';
+    if (humidityEl) humidityEl.textContent = '82%';
+    if (iconEl) iconEl.innerHTML = '<i class="fas fa-cloud"></i>';
+    
+    console.log('🌤️ Static weather data displayed');
+}
+
+async function updateWeather() {
+    // Проверяем, запущен ли сайт локально
+    const isLocal = window.location.protocol === 'file:' || 
+                    window.location.hostname === 'localhost' || 
+                    window.location.hostname === '127.0.0.1' ||
+                    window.location.hostname === '';
+    
+    if (isLocal) {
+        console.log('⚠️ Running locally, showing static weather data');
+        showStaticWeather();
+        return;
+    }
+    
+    try {
+        // Используем wttr.in API (бесплатное, без ключа, простое)
+        const response = await fetch('https://wttr.in/Stavropol?format=j1');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('📦 Weather data received:', data);
+        
+        const current = data.current_condition[0];
+        
+        // Обновляем виджет
+        const temp = Math.round(current.temp_C);
+        const wind = Math.round(current.windspeedKmph / 3.6);
+        const humidity = current.humidity;
+        const desc = current.lang_ru ? current.lang_ru[0].value : current.weatherDesc[0].value;
+        
+        document.getElementById('weatherTempInline').textContent = temp + '°';
+        document.getElementById('weatherWindInline').textContent = wind + ' м/с';
+        document.getElementById('weatherHumidityInline').textContent = humidity + '%';
+        document.getElementById('weatherDescInline').textContent = desc.toLowerCase();
+        
+        const weatherCode = parseInt(current.weatherCode);
+        const iconClass = getWeatherIconFromCode(weatherCode);
+        document.getElementById('weatherIconInline').innerHTML = `<i class="fas ${iconClass}"></i>`;
+        
+        console.log('✅ Weather updated:', { temp, wind, humidity, desc });
+    } catch (error) {
+        console.error('❌ Weather fetch failed:', error);
+        showStaticWeather();
+    }
+}
+
+function getWeatherIconFromCode(code) {
+    if (code === 113) return 'fa-sun';
+    if (code === 116) return 'fa-cloud-sun';
+    if (code === 119 || code === 122) return 'fa-cloud';
+    if (code === 143 || code === 248 || code === 260) return 'fa-smog';
+    if (code >= 176 && code <= 299) return 'fa-cloud-rain';
+    if (code >= 323 && code <= 395) return 'fa-snowflake';
+    if (code >= 200 && code <= 232) return 'fa-bolt';
+    return 'fa-cloud';
+}
+
+// Инициализация при загрузке
+(function initWeather() {
+    console.log('🚀 Weather widget initializing...');
+    
+    // Ждем загрузки DOM
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(updateWeather, 100);
+        });
+    } else {
+        // DOM уже загружен
+        setTimeout(updateWeather, 100);
+    }
+    
+    // Обновляем каждые 30 минут (только если не локально)
+    if (window.location.protocol !== 'file:') {
+        setInterval(updateWeather, 30 * 60 * 1000);
+    }
+})();
